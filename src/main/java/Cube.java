@@ -1,6 +1,4 @@
-import java.text.MessageFormat;
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * Contains the info about a cube
@@ -14,10 +12,9 @@ import java.util.Queue;
 
 public class Cube{
 
-    LinkedList<Integer> steps;
-
-    private Color[] faces;
-    private Color[] initState;
+    public LinkedList<Integer> steps;
+    public Color[] faces;
+    public Color[] initState;
 
     public Cube(Color[] faces){
         this.faces = faces;
@@ -31,8 +28,48 @@ public class Cube{
         initStepsList();
     }
 
+    public Cube(Cube toCopy){
+        faces = new Color[toCopy.faces.length];
+        for(int i = 0; i < toCopy.faces.length; i++){
+            faces[i] = toCopy.faces[i];
+        }
+
+        initState = new Color[toCopy.initState.length];
+        for(int i = 0; i < toCopy.initState.length; i++){
+            initState[i] = toCopy.initState[i];
+        }
+
+        steps = new LinkedList<Integer>();
+        for(int i = 0; i < toCopy.steps.size(); i++){
+            steps.add(toCopy.steps.get(i));
+        }
+    }
+
     private void initStepsList(){
-        steps.add(32);
+        steps.add(0);
+        steps.add(1);
+        steps.add(1);
+        steps.add(1);
+        steps.add(2);
+        steps.add(1);
+        steps.add(1);
+        steps.add(1);
+        steps.add(2);
+        steps.add(1);
+        steps.add(1);
+        steps.add(1);
+        steps.add(3);
+        steps.add(1);
+        steps.add(1);
+        steps.add(1);
+        steps.add(3);
+        steps.add(1);
+        steps.add(1);
+        steps.add(1);
+        steps.add(2);
+        steps.add(1);
+        steps.add(1);
+        steps.add(1);
     }
 
     private void identity(){
@@ -79,6 +116,42 @@ public class Cube{
         rightRoll();
     }
 
+    public void reset(){
+        steps = new LinkedList<Integer>();
+        initStepsList();
+    }
+
+    public boolean hasNext(){
+        if(steps.size() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void next(){
+
+        if(steps.size() == 0){
+            throw new IllegalStateException("That is an invalid state for the cube");
+        }
+
+        switch(steps.getFirst()){
+            case 0:
+                identity();
+                break;
+            case 1:
+                rotate();
+                break;
+            case 2:
+                rightRoll();
+                break;
+            case 3:
+                leftRoll();
+                break;
+        }
+        steps.removeFirst();
+    }
+
     public String toString(){
         String out = "[";
         for(int i = 0; i < this.faces.length; i++){
@@ -90,5 +163,9 @@ public class Cube{
         out += "]";
 
         return out;
+    }
+
+    public Cube copy(){
+        return new Cube(this);
     }
 }
