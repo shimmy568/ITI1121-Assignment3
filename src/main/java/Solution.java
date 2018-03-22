@@ -18,6 +18,24 @@ import java.util.HashMap;
         this.cubes = cubes;
     }
 
+    public Solution(Solution other, Cube c){
+        if(c == null){
+            throw new IllegalArgumentException("The cube passed in must not be null");
+        }
+        
+        if(other == null){
+            cubes = new Cube[]{c};
+        }else{
+            cubes = new Cube[other.size() + 1];
+            
+            for(int i = 0; i < other.size(); i++){
+                cubes[i] = other.cubes[i].copy();
+            }
+
+            cubes[cubes.length - 1] = c.copy();
+        }
+    }
+
     /**
      * Returns the number of cubes in the solution
      */
@@ -42,5 +60,21 @@ import java.util.HashMap;
         return true;
     }
 
+    public boolean isValid(Cube next){
+        Solution temp = new Solution(this, next);
+        return temp.isValid();
+    }
 
- }
+    public String toString(){
+        String outp = "[";
+        for(int i = 0; i < this.size(); i++){
+            outp += this.cubes[i].toString();
+            if(i != this.size() - 1){
+                outp += ", ";
+            }
+        }
+        outp += "]";
+
+        return outp;
+    }
+}
