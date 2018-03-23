@@ -1,3 +1,4 @@
+import java.awt.font.NumericShaper;
 import java.util.HashMap;
 
 /**
@@ -10,17 +11,38 @@ import java.util.HashMap;
  *
  */
 
- public class Solution {
+public class Solution {
 
     Cube[] cubes;
+    static int numberOfCalls;
 
     /**
      * Creates a soltution object from a list of cubes
+     * making a deep copy of each cube passed in
      * 
      * @param cubes - The list of cubes to create the solution with
      */
     public Solution(Cube[] cubes){
-        this.cubes = cubes;
+        this.cubes = new Cube[cubes.length];
+        for(int i = 0; i < cubes.length; i++){
+            this.cubes[i] = new Cube(cubes[i]);
+        }
+    }
+
+    /**
+     * Resets the counter for the number of calls
+     * made to isValid
+     */
+    public static void resetNumberOfCalls(){
+        numberOfCalls = 0;
+    }
+
+    /**
+     * Returns the number of calls that have been made
+     * to the isValid made method
+     */
+    public static int getNumberOfCalls(){
+        return numberOfCalls;
     }
 
     /**
@@ -59,7 +81,8 @@ import java.util.HashMap;
      * Checks if the solution is valid
      */
     public boolean isValid(){
-        for(int i = 0; i < 6; i++){
+        numberOfCalls++;
+        for(int i = 1; i < 5; i++){
             HashMap<Color, Boolean> foundColors = new HashMap<Color, Boolean>();
             for(int o = 0; o < this.size(); o++){
                 if(foundColors.containsKey(this.cubes[o].faces[i])){
@@ -79,6 +102,7 @@ import java.util.HashMap;
      * @param next - The cube to be added
      */
     public boolean isValid(Cube next){
+        numberOfCalls++;
         Solution temp = new Solution(this, next);
         return temp.isValid();
     }
