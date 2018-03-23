@@ -22,25 +22,46 @@ public class Solve{
             new Cube(new Color[]{Color.BLUE, Color.RED, Color.GREEN, Color.GREEN, Color.WHITE, Color.WHITE})
         };
 
-        generateAndTest(testCubes);
-        System.out.println(Solution.numberOfCalls);
+        Queue<Solution> sad = new LinkedList<Solution>();
+
+        Queue<Solution> gr = generateAndTest(testCubes);
+        System.out.println(Solution.getNumberOfCalls());
+
+        Queue<Solution> br = breadthFirstSearch(testCubes);
+        System.out.println(Solution.getNumberOfCalls());
+
+        System.out.println(gr.size());
+        System.out.println(br.size());
+
+        LinkedList<Solution> brl = (LinkedList) br;
+        LinkedList<Solution> grl = (LinkedList) gr;
+
+        for(int i = 0; i < grl.size(); i++){
+            System.out.println(grl.get(i));
+        }
+        System.out.println('\n');
+        for(int i = 0; i < brl.size(); i++){
+            System.out.println(brl.get(i));
+        }
     }
 
-    public static Queue<Cube[]> generateAndTest(Cube[] cubes){
-        Queue<Cube[]> solutions = new LinkedList<Cube[]>();
-        for(int a = 0; a < 24; a++){
-            for(int b = 0; b < 24; b++){
-                for(int c = 0; c < 24; c++){
-                    for(int d = 0; d < 24; d++){
+    public static Queue<Solution> generateAndTest(Cube[] cubes){
+        Solution.resetNumberOfCalls();
+        Queue<Solution> solutions = new LinkedList<Solution>();
+        for(int a = 1; a < 24; a++){
+            for(int b = 1; b < 24; b++){
+                for(int c = 1; c < 24; c++){
+                    for(int d = 1; d < 24; d++){
                         int[] numSteps = new int[]{a, b, c, d};
                         Solution sol = new Solution(cubes);
-                        for(int i = 0; i < 4; i++){
-                            for(int s = 0; s < numSteps[i]; s++){
+                        for(int i = 0; i < cubes.length; i++){
+                            for(int s = 0; s < numSteps[i] + 1; s++){
                                 sol.cubes[i].next();
                             }
                         }
                         if(sol.isValid()){
-                            solutions.add(sol.cubes);
+                            System.out.println(a + " " + b + " " + c + " " + d);
+                            solutions.add(sol);
                         }
                     }
                 }
@@ -49,7 +70,36 @@ public class Solve{
         return solutions;
     }
 
-    public static void breadthFirstSearch(){
+    public static Queue<Solution> breadthFirstSearch(Cube[] cubes){
+        Solution.resetNumberOfCalls();
+        Queue<Solution> solutions = new LinkedList<Solution>();
 
+        Queue<Solution> ops = new LinkedList<Solution>();
+        do {
+            // Get next, only remove if there is a solution to remove
+            Solution cur = ops.peek();
+            Cube toAdd;
+
+            if(cur != null && cur.size() == cubes.length){
+                solutions.add(cur);
+                ops.remove();
+                continue;
+            }
+
+            if(cur != null){
+                toAdd = new Cube(cubes[cur.size()]);
+                ops.remove();
+            }else{
+                toAdd = new Cube(cubes[0]);
+            }
+
+            for(int i = 1; i < 24; i++){
+                toAdd.next();
+                if(cur == null || cur.isValid(toAdd)){
+                    ops.add(new Solution(cur, new Cube(toAdd)));
+                }
+            }
+        } while (ops.size() > 0);
+        return solutions;
     }
 }

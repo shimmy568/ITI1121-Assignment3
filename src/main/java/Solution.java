@@ -122,4 +122,16 @@ public class Solution {
 
         return outp;
     }
+
+    public boolean equals(Solution other){
+        for(int i = 0; i < other.cubes.length; i++){
+            for(int o = 0; o < 6; o++){
+                if(this.cubes[i].faces[o] != other.cubes[i].faces[o]){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }
