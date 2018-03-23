@@ -3,7 +3,7 @@
  * 
  * @author Owen Anderson
  * Student number: 300011168
- * Course: ITI 1121-A
+ * Course: ITI 1121-C
  * Assignment: 3
  *
  */

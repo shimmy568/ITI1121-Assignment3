@@ -5,7 +5,7 @@ import java.util.LinkedList;
  * 
  * @author Owen Anderson
  * Student number: 300011168
- * Course: ITI 1121-A
+ * Course: ITI 1121-C
  * Assignment: 3
  *
  */
@@ -181,7 +181,6 @@ public class Cube{
      * Moves the cube to the next state
      */
     public void next(){
-
         if(steps.size() == 0){
             throw new IllegalStateException("That is an invalid state for the cube");
         }
