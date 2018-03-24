@@ -23,11 +23,13 @@ public class Solve{
 
         long start, stop;
 
+        System.out.println("generateAndTest:");
         start = System.nanoTime();
         generateAndTest(testCubes);
         stop = System.nanoTime();
         System.out.println("Elapsed time: " + ((stop - start) / 1000000d) + " milliseconds");
 
+        System.out.println("\nbreadthFirstSearch:");
         start = System.nanoTime();
         breadthFirstSearch(testCubes);
         stop = System.nanoTime();
