@@ -1,6 +1,3 @@
-import java.util.LinkedList;
-import java.util.Queue;
-
 /**
  * This classprovides two methods for solving the instant insanity problem:
  * breadthFirstSearch and generateAndTest.
@@ -23,18 +20,18 @@ public class Solve{
         };
 
         StudentInfo.display();
-        
+
         long start, stop;
 
         start = System.nanoTime();
         generateAndTest(testCubes);
         stop = System.nanoTime();
-        System.out.println("Elapsed time: " + ((stop - start) / 1000000) + " milliseconds");
+        System.out.println("Elapsed time: " + ((stop - start) / 1000000d) + " milliseconds");
 
         start = System.nanoTime();
         breadthFirstSearch(testCubes);
         stop = System.nanoTime();
-        System.out.println("Elapsed time: " + ((stop - start) / 1000000) + " milliseconds");
+        System.out.println("Elapsed time: " + ((stop - start) / 1000000d) + " milliseconds");
 
     }
 
@@ -44,7 +41,7 @@ public class Solve{
      */
     public static Queue<Solution> generateAndTest(Cube[] cubes){
         Solution.resetNumberOfCalls();
-        Queue<Solution> solutions = new LinkedList<Solution>();
+        Queue<Solution> solutions = new LinkedQueue<Solution>();
         for(int a = 1; a <= 24; a++){
             for(int b = 1; b <= 24; b++){
                 for(int c = 1; c <= 24; c++){
@@ -57,7 +54,7 @@ public class Solve{
                             }
                         }
                         if(sol.isValid()){
-                            solutions.add(sol);
+                            solutions.push(sol);
                         }
                     }
                 }
@@ -72,23 +69,23 @@ public class Solve{
      */
     public static Queue<Solution> breadthFirstSearch(Cube[] cubes){
         Solution.resetNumberOfCalls();
-        Queue<Solution> solutions = new LinkedList<Solution>();
+        Queue<Solution> solutions = new LinkedQueue<Solution>();
 
-        Queue<Solution> ops = new LinkedList<Solution>();
+        Queue<Solution> ops = new LinkedQueue<Solution>();
         do {
             // Get next, only remove if there is a solution to remove
             Solution cur = ops.peek();
             Cube toAdd;
 
             if(cur != null && cur.size() == cubes.length){
-                solutions.add(cur);
-                ops.remove();
+                solutions.push(cur);
+                ops.pop();
                 continue;
             }
 
             if(cur != null){
                 toAdd = new Cube(cubes[cur.size()]);
-                ops.remove();
+                ops.pop();
             }else{
                 toAdd = new Cube(cubes[0]);
             }
@@ -96,10 +93,10 @@ public class Solve{
             for(int i = 0; i < 24; i++){
                 toAdd.next();
                 if(cur == null || cur.isValid(toAdd)){
-                    ops.add(new Solution(cur, new Cube(toAdd)));
+                    ops.push(new Solution(cur, new Cube(toAdd)));
                 }
             }
-        } while (ops.size() > 0);
+        } while (!ops.isEmpty());
         return solutions;
     }
 }

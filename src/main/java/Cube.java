@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-
 /**
  * Contains the info about a cube
  * 
@@ -12,7 +10,7 @@ import java.util.LinkedList;
 
 public class Cube{
 
-    public LinkedList<Integer> steps;
+    public Queue<Integer> steps;
     public Color[] faces;
     public Color[] initState;
 
@@ -27,7 +25,7 @@ public class Cube{
             initState[i] = faces[i];
         }
 
-        steps = new LinkedList<Integer>();
+        steps = new LinkedQueue<Integer>();
         initStepsList();
     }
 
@@ -47,10 +45,13 @@ public class Cube{
             initState[i] = toCopy.initState[i];
         }
 
-        steps = new LinkedList<Integer>();
-        for(int i = 0; i < toCopy.steps.size(); i++){
-            steps.add(toCopy.steps.get(i));
+        steps = new LinkedQueue<Integer>();
+        Queue<Integer> newSteps = new LinkedQueue<Integer>();
+        while(!toCopy.steps.isEmpty()){
+            newSteps.push(toCopy.steps.peek());
+            steps.push(toCopy.steps.pop());
         }
+        toCopy.steps = newSteps;
     }
 
     /**
@@ -58,30 +59,30 @@ public class Cube{
      * to go through all 24 states
      */
     private void initStepsList(){
-        steps.add(0);
-        steps.add(1);
-        steps.add(1);
-        steps.add(1);
-        steps.add(2);
-        steps.add(1);
-        steps.add(1);
-        steps.add(1);
-        steps.add(2);
-        steps.add(1);
-        steps.add(1);
-        steps.add(1);
-        steps.add(3);
-        steps.add(1);
-        steps.add(1);
-        steps.add(1);
-        steps.add(3);
-        steps.add(1);
-        steps.add(1);
-        steps.add(1);
-        steps.add(2);
-        steps.add(1);
-        steps.add(1);
-        steps.add(1);
+        steps.push(0);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(2);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(2);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(3);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(3);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(2);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
     }
 
     /**
@@ -162,7 +163,7 @@ public class Cube{
      * Resets the cube to the inital state
      */
     public void reset(){
-        steps = new LinkedList<Integer>();
+        steps = new LinkedQueue<Integer>();
         initStepsList();
     }
 
@@ -170,7 +171,7 @@ public class Cube{
      * Returns if the cube has any more unchecked states
      */
     public boolean hasNext(){
-        if(steps.size() > 0){
+        if(!steps.isEmpty()){
             return true;
         }else{
             return false;
@@ -181,11 +182,11 @@ public class Cube{
      * Moves the cube to the next state
      */
     public void next(){
-        if(steps.size() == 0){
+        if(steps.isEmpty()){
             throw new IllegalStateException("That is an invalid state for the cube");
         }
 
-        switch(steps.getFirst()){
+        switch(steps.peek()){
             case 0:
                 identity();
                 break;
@@ -199,7 +200,7 @@ public class Cube{
                 leftRoll();
                 break;
         }
-        steps.removeFirst();
+        steps.pop();
     }
 
     /**

@@ -28,6 +28,9 @@ public class LinkedQueue<T> implements Queue<T> {
     }
 
     public T peek(){
+        if(head == null){
+            return null;
+        }
         return head.getValue();
     }
 
