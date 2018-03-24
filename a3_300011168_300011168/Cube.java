@@ -1,0 +1,229 @@
+/**
+ * Contains the info about a cube
+ * 
+ * @author Owen Anderson
+ * Student number: 300011168
+ * Course: ITI 1121-C
+ * Assignment: 3
+ *
+ */
+
+public class Cube{
+
+    public Queue<Integer> steps;
+    public Color[] faces;
+    public Color[] initState;
+
+    /**
+     * Create a cube from a list of colors
+     */
+    public Cube(Color[] faces){
+        this.faces = faces;
+        initState = new Color[faces.length];
+        
+        for(int i = 0; i < this.faces.length; i++){
+            initState[i] = faces[i];
+        }
+
+        steps = new LinkedQueue<Integer>();
+        initStepsList();
+    }
+
+    /**
+     * The constuctor to make a copy of the cube
+     * 
+     * @param toCopy - The cube to make this cube a deep copy of
+     */
+    public Cube(Cube toCopy){
+        faces = new Color[toCopy.faces.length];
+        for(int i = 0; i < toCopy.faces.length; i++){
+            faces[i] = toCopy.faces[i];
+        }
+
+        initState = new Color[toCopy.initState.length];
+        for(int i = 0; i < toCopy.initState.length; i++){
+            initState[i] = toCopy.initState[i];
+        }
+
+        steps = new LinkedQueue<Integer>();
+        Queue<Integer> newSteps = new LinkedQueue<Integer>();
+        while(!toCopy.steps.isEmpty()){
+            newSteps.push(toCopy.steps.peek());
+            steps.push(toCopy.steps.pop());
+        }
+        toCopy.steps = newSteps;
+    }
+
+    /**
+     * Sets up the list of steps the cube needs to take
+     * to go through all 24 states
+     */
+    private void initStepsList(){
+        steps.push(0);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(2);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(2);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(3);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(3);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+        steps.push(2);
+        steps.push(1);
+        steps.push(1);
+        steps.push(1);
+    }
+
+    /**
+     * Sets the cube to it's inital state
+     */
+    private void identity(){
+        for(int i = 0; i < this.faces.length; i++){
+            faces[i] = initState[i];
+        }
+    }
+
+    /**
+     * Gets the top face of the cube
+     */
+    public Color getUp(){
+        return faces[0];
+    }
+
+    /**
+     * Gets the front face of the cube
+     */
+    public Color getFront(){
+        return faces[0];
+    }
+
+    /**
+     * Gets the right face of the cube
+     */
+    public Color getRight(){
+        return faces[0];
+    }
+
+    /**
+     * Gets the back face of the cube
+     */
+    public Color getBack(){
+        return faces[0];
+    }
+
+    /**
+     * Gets the left face of the cube
+     */
+    public Color getLeft(){
+        return faces[0];
+    }
+
+    /**
+     * Gets the bottom of the cube
+     */
+    public Color getDown(){
+        return faces[0];
+    }
+
+    /**
+     * Rotates the cube so the left side faces front
+     */
+    private void rotate(){
+        faces = new Color[]{faces[0], faces[4], faces[1], faces[2], faces[3], faces[5]};
+    }
+
+    /**
+     * Rolls the cube to the right
+     */
+    private void rightRoll(){
+        faces = new Color[]{faces[4], faces[1], faces[0], faces[3], faces[5], faces[2]};
+    }
+
+    /**
+     * Rolls the cube to the left
+     */
+    private void leftRoll(){
+        rightRoll();
+        rightRoll();
+        rightRoll();
+    }
+
+    /**
+     * Resets the cube to the inital state
+     */
+    public void reset(){
+        steps = new LinkedQueue<Integer>();
+        initStepsList();
+    }
+
+    /**
+     * Returns if the cube has any more unchecked states
+     */
+    public boolean hasNext(){
+        if(!steps.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * Moves the cube to the next state
+     */
+    public void next(){
+        if(steps.isEmpty()){
+            throw new IllegalStateException("That is an invalid state for the cube");
+        }
+
+        switch(steps.peek()){
+            case 0:
+                identity();
+                break;
+            case 1:
+                rotate();
+                break;
+            case 2:
+                rightRoll();
+                break;
+            case 3:
+                leftRoll();
+                break;
+        }
+        steps.pop();
+    }
+
+    /**
+     * Converts this cube to it's string 
+     * representation
+     */
+    public String toString(){
+        String out = "[";
+        for(int i = 0; i < this.faces.length; i++){
+            out += this.faces[i];
+            if(i != this.faces.length - 1){
+                out += ", ";
+            }
+        }
+        out += "]";
+
+        return out;
+    }
+
+    /**
+     * Returns a deep copy of this cube
+     */
+    public Cube copy(){
+        return new Cube(this);
+    }
+}
